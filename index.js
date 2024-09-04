@@ -8,6 +8,12 @@ const {
 
 module.exports = class Botex {
 
+	#vk;
+	#token;
+	#app_id;
+	#creds;
+	#bearer;
+
 	constructor(token) {
 		this.vk = null
 		this.token = token
@@ -142,6 +148,25 @@ module.exports = class Botex {
 
 	}
 
+	addSymptoms = async () => {
+
+		let headers = {
+			"authorization": "Bearer " + this.bearer
+		}
+
+		let date = this.getCurrentDateFormatted()
+		data = {
+			"date": date,
+			"symptoms": ["tired"]
+		}
+
+		let symptomsdata = await axios.post("https://kotex-flow.ru-prod2.kts.studio/api/calendar/add_symptoms", data, {
+			headers: headers
+		})
+		return symptomsdata.data
+
+	}
+
 	markDays = async () => {
 
 		let headers = {
@@ -182,7 +207,7 @@ module.exports = class Botex {
 			let month = String(futureDate.getMonth() + 1).padStart(2, '0'); // Months r zerobsd, so add 1
 			let day = String(futureDate.getDate()).padStart(2, '0');
 			dates.push(`${year}-${month}-${day}`);
-			
+
 		}
 
 		return dates;

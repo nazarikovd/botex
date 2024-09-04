@@ -68,55 +68,40 @@ app.get('/accounts.getAll', (req, res) => {
 
 });
 
-app.get('/cotex.getShop', (req, res) => {
+app.get('/cotex.getShop', async (req, res) => {
 
-	let uuid = req.query.uuid
-	let uid = req.query.uid
+	let bot = getBotByQuery(req, res)
 
-	if (!uuid && !uid) {
+	if(bot === null){
+
 		bots[0].botex.getShop().then((a) => {
 			res.send({
-				"data": a
+				"result": a
 			})
 		})
 
 	} else {
 
-		if (uuid && uid) {
-			res.send("error only one of uuid uid can be set")
+		if (bot === false) {
 			return
 		}
 
-		let bot
-
-		if (uuid) {
-			bot = bots.filter((bott) => bott.uuid == uuid)
-		}
-		if (uid) {
-			bot = bots.filter((bott) => bott.botex.user.id == uid)
-		}
-
-		if (!bot[0]) {
-			res.send("not found")
-			return
-		}
-
-		bot[0].botex.getShop().then((a) => {
+		bot.botex.getShop().then((a) => {
 			res.send({
-				"data": a
+				"result": a
 			})
 		})
 
 
 	}
+
 });
 
 app.get('/cotex.tryToGetAllPoints', async (req, res) => {
 
-	let uuid = req.query.uuid
-	let uid = req.query.uid
+	let bot = getBotByQuery(req, res)
 
-	if (!uuid && !uid) {
+	if(bot === null){
 
 		let results = []
 
@@ -128,14 +113,114 @@ app.get('/cotex.tryToGetAllPoints', async (req, res) => {
 		}
 
 		res.send({
-			"results": results
+			"result": results
 		})
+
+	} else {
+
+		if (bot === false) {
+			return
+		}
+
+		bot.botex.tryToGetAllPoints().then((a) => {
+			res.send({
+				"result": a
+			})
+		})
+
+
+	}
+
+});
+
+app.get('/cotex.addSymptoms', async (req, res) => {
+
+	let bot = getBotByQuery(req, res)
+
+	if(bot === null){
+
+		let results = []
+
+		for (let bot of bots) {
+
+			let res = await bot.botex.addSymptoms()
+			results.push(res)
+
+		}
+
+		res.send({
+			"result": results
+		})
+
+	} else {
+
+		if (bot === false) {
+			return
+		}
+
+		bot.botex.addSymptoms().then((a) => {
+			res.send({
+				"result": a
+			})
+		})
+
+
+	}
+
+});
+
+app.get('/cotex.markDays', async (req, res) => {
+
+	let bot = getBotByQuery(req, res)
+
+	if(bot === null){
+
+		let results = []
+
+		for (let bot of bots) {
+
+			let res = await bot.botex.markDays()
+			results.push(res)
+
+		}
+
+		res.send({
+			"result": results
+		})
+
+	} else {
+
+		if (bot === false) {
+			return
+		}
+
+		bot.botex.markDays().then((a) => {
+			res.send({
+				"result": a
+			})
+		})
+
+
+	}
+
+});
+
+
+
+function getBotByQuery(req, res){
+
+	let uuid = req.query.uuid
+	let uid = req.query.uid
+
+	if (!uuid && !uid) {
+
+		return null
 
 	} else {
 
 		if (uuid && uid) {
 			res.send("error only one of uuid uid can be set")
-			return
+			return false
 		}
 
 		let bot
@@ -149,18 +234,14 @@ app.get('/cotex.tryToGetAllPoints', async (req, res) => {
 
 		if (!bot[0]) {
 			res.send("not found")
-			return
+			return false
 		}
-		
-		bot[0].botex.tryToGetAllPoints().then((a) => {
-			res.send({
-				"data": a
-			})
-		})
 
+		return bot[0]
 
 	}
-});
+
+}
 
 app.listen(port, () => {
 	console.log(`runnin on http://localhost:${port}`)
