@@ -16,9 +16,12 @@ app.get('/accounts.add', (req, res) => {
 	if (!token) {
 		return res.status(400).send('Token is required');
 	}
+
 	let uuid = randomUUID()
 	let botex = new Botex(token);
+
 	botex.load().then((state) => {
+
 		if (state.success) {
 
 			bots.push({
@@ -43,15 +46,18 @@ app.get('/accounts.add', (req, res) => {
 });
 
 app.get('/accounts.getAll', (req, res) => {
+
 	let result = []
 
 	for (let bot of bots) {
+
 		result.push({
 			"uuid": bot.uuid,
 			"uid": bot.botex.user.id,
 			"points": bot.botex._cotexData.points,
 			"_lastCotexData": bot.botex._cotexData
 		})
+
 	}
 
 	res.send({
@@ -63,6 +69,7 @@ app.get('/accounts.getAll', (req, res) => {
 });
 
 app.get('/cotex.getShop', (req, res) => {
+
 	let uuid = req.query.uuid
 	let uid = req.query.uid
 
@@ -88,11 +95,12 @@ app.get('/cotex.getShop', (req, res) => {
 		if (uid) {
 			bot = bots.filter((bott) => bott.botex.user.id == uid)
 		}
-		console.log(bot, bots)
+
 		if (!bot[0]) {
 			res.send("not found")
 			return
 		}
+
 		bot[0].botex.getShop().then((a) => {
 			res.send({
 				"data": a
@@ -104,6 +112,7 @@ app.get('/cotex.getShop', (req, res) => {
 });
 
 app.get('/cotex.tryToGetAllPoints', async (req, res) => {
+
 	let uuid = req.query.uuid
 	let uid = req.query.uid
 
@@ -112,8 +121,10 @@ app.get('/cotex.tryToGetAllPoints', async (req, res) => {
 		let results = []
 
 		for (let bot of bots) {
+
 			let res = await bot.botex.tryToGetAllPoints()
 			results.push(res)
+
 		}
 
 		res.send({
@@ -135,11 +146,12 @@ app.get('/cotex.tryToGetAllPoints', async (req, res) => {
 		if (uid) {
 			bot = bots.filter((bott) => bott.botex.user.id == uid)
 		}
-		console.log(bot, bots)
+
 		if (!bot[0]) {
 			res.send("not found")
 			return
 		}
+		
 		bot[0].botex.tryToGetAllPoints().then((a) => {
 			res.send({
 				"data": a
