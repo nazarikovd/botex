@@ -12,21 +12,52 @@ import { AdaptivityProvider,
   SimpleCell,
   IconButton,
   Avatar,
-  Placeholder } from '@vkontakte/vkui';
+  Placeholder,
+  PanelHeaderBack,
+  CellButton,
+  Header,
+  Group,
+  Spacing
+   } from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
-import { Icon28Menu } from '@vkontakte/icons';
-
+import { Icon28Menu,
+Icon28MagicWandOutline,
+Icon28BrainOutline,
+Icon28Notifications,
+Icon28ClockOutline,
+Icon28HashtagOutline,
+Icon28Users3,
+Icon28ShoppingCartOutline,
+Icon28AddOutline } from '@vkontakte/icons';
+import BotScreen from './BotScreen'
 
 function App() {
   const [bots, setBots] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [cbot, setCBot] = useState({})
+  const [cbot, setCBot] = useState(null)
   const [activepanel, setActivePanel] = useState('home')
 
-  const openConfig = (bot) => {
-    setCBot(bot)
-    setActivePanel("botconfig")
+  const openBotScreen = (cbot) => {
+
+    setCBot(cbot)
+    setActivePanel("botscreen")
+
   }
+  const doNothing = () => {
+
+  }
+
+  const BotCell = ({ bot }) => {
+  return (
+    <SimpleCell
+      before={<Avatar size={40} src={bot._lastCotexData.photo_100} />}
+      subtitle={`Points: ${bot.points}`}
+      onClick={() => openBotScreen(bot)}
+    >
+      {bot._lastCotexData.first_name} {bot._lastCotexData.last_name}
+    </SimpleCell>
+  );
+};
 
   useEffect(() => {
     const fetchBots = async () => {
@@ -45,44 +76,86 @@ function App() {
   }, []);
 
   return (
-    <AppRoot>
+    <AppRoot layout="plain">
     <View activePanel={activepanel}>
       <Panel id="home">
         <PanelHeader>botex</PanelHeader>
 
+        <Group>
+
+          <SimpleCell
+            before={<Icon28ClockOutline/>}
+            onClick={() => {}}
+          >
+
+            Задачи
+
+          </SimpleCell>
+
+          <SimpleCell
+            before={<Icon28ShoppingCartOutline/>}
+            onClick={() => {}}
+          >
+
+            Магазин
+
+          </SimpleCell>
+
+          <SimpleCell
+            before={<Icon28Notifications/>}
+            onClick={() => {}}
+          >
+
+            Уведомления
+
+          </SimpleCell>
+        </Group>
+
+        <Group header={<Header>Добавить</Header>}> 
+          <SimpleCell
+            before={<Icon28AddOutline/>}
+            onClick={() => {}}
+          >
+
+            access token
+
+          </SimpleCell>
+          <SimpleCell
+            before={<Icon28AddOutline/>}
+            onClick={() => {}}
+          >
+
+            vk access token settings
+
+          </SimpleCell>
+        </Group>
+        <Group header={<Header>Боты</Header>}> 
+          <SimpleCell
+            before={<Icon28HashtagOutline/>}
+            onClick={() => openBotScreen()}
+          >
+
+            Выбрать всех сразу
+
+          </SimpleCell>
+
+          <Spacing />
               {bots.length > 0 ? (
 
                 bots.map(bot => (
-                  <SimpleCell
-                    before={<Avatar size={40} src={bot._lastCotexData.photo_100} />}
-                    after={
-                      <IconButton onClick={() => openConfig(bot)}>
-                        <Icon28Menu/>
-                      </IconButton>
-                    }
-                    subtitle={`Points: ${bot.points}`}
-                  >
-
-                    {bot._lastCotexData.first_name} {bot._lastCotexData.last_name}
-
-                  </SimpleCell>
+                  <BotCell key={bot.uuid} bot={bot} />
                 ))
 
               ) : (
                 <Placeholder>No bots found.</Placeholder>
               )}
 
-        
+        </Group>
+
       </Panel>
 
-      <Panel id="botconfig">
-        <PanelHeader>botex</PanelHeader>
-
-             <SimpleCell>
-             {cbot.uuid}
-             </SimpleCell>
-
-        
+      <Panel id="botscreen">
+        <BotScreen bots={bots} cbot={cbot} onBack={() => { setActivePanel('home') }} />
       </Panel>
     </View>
     </AppRoot>
@@ -100,3 +173,6 @@ root.render(
 );
 
 export default App;
+
+
+
