@@ -7,7 +7,7 @@ const {
 } = require('crypto')
 let bots = []
 
-
+app.use(express.static('botex-app/build'))
 
 app.get('/accounts.add', (req, res) => {
 
