@@ -4,36 +4,28 @@ import { AdaptivityProvider,
   ConfigProvider,
   AppRoot,
   View,
-  Text,
-  Button,
   Panel,
   PanelHeader,
-  Div,
   SimpleCell,
-  IconButton,
   Avatar,
   Placeholder,
-  PanelHeaderBack,
-  CellButton,
   Header,
   Group,
   Spacing
    } from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
-import { Icon28Menu,
-Icon28MagicWandOutline,
-Icon28BrainOutline,
+import {
 Icon28Notifications,
 Icon28ClockOutline,
 Icon28HashtagOutline,
-Icon28Users3,
 Icon28ShoppingCartOutline,
 Icon28AddOutline } from '@vkontakte/icons';
+
 import BotScreen from './BotScreen'
+import ShopScreen from './ShopScreen'
 
 function App() {
   const [bots, setBots] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [cbot, setCBot] = useState(null)
   const [activepanel, setActivePanel] = useState('home')
 
@@ -43,9 +35,7 @@ function App() {
     setActivePanel("botscreen")
 
   }
-  const doNothing = () => {
 
-  }
 
   const BotCell = ({ bot }) => {
   return (
@@ -58,9 +48,7 @@ function App() {
     </SimpleCell>
   );
 };
-
-  useEffect(() => {
-    const fetchBots = async () => {
+  const fetchBots = async () => {
       try {
         const response = await fetch('/accounts.getAll');
         const data = await response.json();
@@ -68,10 +56,10 @@ function App() {
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
-        setLoading(false);
       }
-    };
+  };
 
+  useEffect(() => {
     fetchBots();
   }, []);
 
@@ -94,7 +82,7 @@ function App() {
 
           <SimpleCell
             before={<Icon28ShoppingCartOutline/>}
-            onClick={() => {}}
+            onClick={() => { setActivePanel("shopscreen") }}
           >
 
             Магазин
@@ -156,6 +144,9 @@ function App() {
 
       <Panel id="botscreen">
         <BotScreen bots={bots} cbot={cbot} onBack={() => { setActivePanel('home') }} />
+      </Panel>
+      <Panel id="shopscreen">
+        <ShopScreen onBack={() => { setActivePanel('home') }} />
       </Panel>
     </View>
     </AppRoot>

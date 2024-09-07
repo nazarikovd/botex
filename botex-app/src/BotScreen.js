@@ -13,10 +13,11 @@ import {
   Icon28HashtagOutline,
   Icon28BrainOutline,
   Icon28MagicWandOutline,
-  Icon28Notifications,
+  Icon28Notifications
 } from '@vkontakte/icons';
 
 const BotScreen = ({ bots, cbot, onBack }) => {
+  
   const [bCount, setBCount] = useState(0)
 
   const tryToGetAll = async () => {
