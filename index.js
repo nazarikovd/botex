@@ -155,7 +155,7 @@ module.exports = class Botex {
 		}
 
 		let date = this.getCurrentDateFormatted()
-		data = {
+		let data = {
 			"date": date,
 			"symptoms": ["tired"]
 		}
