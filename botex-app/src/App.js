@@ -23,6 +23,7 @@ Icon28AddOutline } from '@vkontakte/icons';
 
 import BotScreen from './BotScreen'
 import ShopScreen from './ShopScreen'
+import AccountManager from './AccountManager'
 
 function App() {
   const [bots, setBots] = useState([]);
@@ -99,21 +100,13 @@ function App() {
           </SimpleCell>
         </Group>
 
-        <Group header={<Header>Добавить</Header>}> 
+        <Group header={<Header>Аккаунты</Header>}> 
           <SimpleCell
             before={<Icon28AddOutline/>}
-            onClick={() => {}}
+            onClick={() => { setActivePanel("accounts") }}
           >
 
-            access token
-
-          </SimpleCell>
-          <SimpleCell
-            before={<Icon28AddOutline/>}
-            onClick={() => {}}
-          >
-
-            vk access token settings
+            Добавить аккаунт
 
           </SimpleCell>
         </Group>
@@ -147,6 +140,9 @@ function App() {
       </Panel>
       <Panel id="shopscreen">
         <ShopScreen onBack={() => { setActivePanel('home') }} />
+      </Panel>
+      <Panel id="accounts">
+        <AccountManager onBack={() => { setActivePanel('home') }} />
       </Panel>
     </View>
     </AppRoot>
