@@ -38,18 +38,31 @@ module.exports = class Botex {
 
 			return {
 				"success": false,
-				"error": "VK INVALID TOKEN"
+				"error": "Something went wrong during [VK AUTH]: Invalid or expired token"
 			}
 
 		}
 
-		await this.getCreds()
-		await this.auth()
+		try {
 
-		return {
-			"success": true,
-			"user": this.user
+			await this.getCreds()
+			await this.auth()
+
+			return {
+				"success": true,
+				"user": this.user
+			}
+
+		} catch {
+
+			return {
+				"success": false,
+				"error": "Something went wrong during [VK GET CREDS] or [KTS AUTH]"
+			}
 		}
+
+
+
 
 	}
 
@@ -78,17 +91,14 @@ module.exports = class Botex {
 	register = async () => {
 
 		let result = {}
-		let headers = {
-			"authorization": "Bearer " + this.bearer
-		}
+
 		let data = {
 			"value": true,
 			"name": "policy052022"
 		}
-		let flagdata = await axios.post("https://kotex-flow.ru-prod2.kts.studio/api/user/flag", data, {
-			headers: headers
-		})
-		result.flag = flagdata.data
+
+		let flagdata = await this.makeApiRequest("user/flag", data)
+		result.flag = flagdata
 		let date = this.getCurrentDateFormatted()
 		data = {
 			"birthdate": "1998-10-10",
@@ -98,41 +108,31 @@ module.exports = class Botex {
 			"period_duration": 5,
 			"cycle_duration": 28
 		}
-		let regdata = await axios.post("https://kotex-flow.ru-prod2.kts.studio/api/user/register_with_cycle", data, {
-			headers: headers
-		})
-		result.reg = regdata.data
+
+		let regdata = await this.makeApiRequest("user/register_with_cycle", data)
+		result.reg = regdata
 		return result
 
 	}
 
 	getShop = async () => {
 
-		let headers = {
-			"authorization": "Bearer " + this.bearer
-		}
-		let shopdata = await axios.get("https://kotex-flow.ru-prod2.kts.studio/api/shop/list", {
-			headers: headers
-		})
-		return shopdata.data
+		let shopdata = await this.makeApiRequest("shop/list")
+		return shopdata
 
 	}
 
 	tryToGetAllPoints = async () => {
 
 		let results = {}
-		let headers = {
-			"authorization": "Bearer " + this.bearer
-		}
+
 		let data = {
 			"value": true,
 			"type": "app"
 		}
 
-		let pointsdata = await axios.post("https://kotex-flow.ru-prod2.kts.studio/api/user/set_notifications", data, {
-			headers: headers
-		})
-		results.notifications = pointsdata.data
+		let pointsdata = await this.makeApiRequest("user/set_notifications", data)
+		results.notifications = pointsdata
 
 		let date = this.getCurrentDateFormatted()
 		data = {
@@ -140,19 +140,13 @@ module.exports = class Botex {
 			"symptoms": ["tired"]
 		}
 
-		let symptomsdata = await axios.post("https://kotex-flow.ru-prod2.kts.studio/api/calendar/add_symptoms", data, {
-			headers: headers
-		})
-		results.symptoms = symptomsdata.data
+		let symptomsdata = await this.makeApiRequest("calendar/add_symptoms", data)
+		results.symptoms = symptomsdata
 		return results
 
 	}
 
 	addSymptoms = async () => {
-
-		let headers = {
-			"authorization": "Bearer " + this.bearer
-		}
 
 		let date = this.getCurrentDateFormatted()
 		let data = {
@@ -160,27 +154,21 @@ module.exports = class Botex {
 			"symptoms": ["tired"]
 		}
 
-		let symptomsdata = await axios.post("https://kotex-flow.ru-prod2.kts.studio/api/calendar/add_symptoms", data, {
-			headers: headers
-		})
-		return symptomsdata.data
+		let symptomsdata = await this.makeApiRequest("calendar/add_symptoms", data)
+		return symptomsdata
 
 	}
 
 	markDays = async () => {
 
-		let headers = {
-			"authorization": "Bearer " + this.bearer
-		}
 		let dates = this.getMarkDateFormatted()
 		let data = {
 			"unmark": [],
 			"mark": dates
 		}
-		let markdata = await axios.post("https://kotex-flow.ru-prod2.kts.studio/api/calendar/mark_days", data, {
-			headers: headers
-		})
-		return markdata.data
+
+		let markdata = await this.makeApiRequest("calendar/mark_days", data)
+		return markdata
 
 	}
 
@@ -211,6 +199,37 @@ module.exports = class Botex {
 		}
 
 		return dates;
+
+	}
+
+	makeApiRequest = async (method, data = null) => {
+
+		let headers = {
+			"authorization": "Bearer " + this.bearer
+		}
+
+		try {
+
+			if(data){
+				
+				let response = await axios.post("https://kotex-flow.ru-prod2.kts.studio/api/" + method, data, {
+					headers: headers
+				})
+
+				return response.data
+
+			}else{
+
+				let response = await axios.get("https://kotex-flow.ru-prod2.kts.studio/api/" + method, {
+					headers: headers
+				})
+
+				return response.data
+			}
+
+		}catch(e){
+			console.log("request failed "+e)
+		}
 
 	}
 
