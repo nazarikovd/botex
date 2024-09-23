@@ -24,6 +24,7 @@ Icon28AddOutline } from '@vkontakte/icons';
 import BotScreen from './BotScreen'
 import ShopScreen from './ShopScreen'
 import AccountManager from './AccountManager'
+import JobsScreen from './JobsScreen'
 
 function App() {
   const [bots, setBots] = useState([]);
@@ -74,7 +75,7 @@ function App() {
 
           <SimpleCell
             before={<Icon28ClockOutline/>}
-            onClick={() => {}}
+            onClick={() => { setActivePanel("jobsscreen") }}
           >
 
             Задачи
@@ -142,7 +143,19 @@ function App() {
         <ShopScreen onBack={() => { setActivePanel('home') }} />
       </Panel>
       <Panel id="accounts">
-        <AccountManager onBack={() => { setActivePanel('home') }} />
+
+        <AccountManager
+          onBack={
+            () => { 
+              fetchBots()
+              setActivePanel('home')
+            }
+          }
+        />
+
+      </Panel>
+      <Panel id="jobsscreen">
+        <JobsScreen onBack={() => { setActivePanel('home') }} />
       </Panel>
     </View>
     </AppRoot>
