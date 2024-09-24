@@ -25,6 +25,7 @@ import BotScreen from './BotScreen'
 import ShopScreen from './ShopScreen'
 import AccountManager from './AccountManager'
 import JobsScreen from './JobsScreen'
+import JobManager from './JobManager'
 
 function App() {
   const [bots, setBots] = useState([]);
@@ -71,17 +72,10 @@ function App() {
       <Panel id="home">
         <PanelHeader>botex</PanelHeader>
 
+
+
+
         <Group>
-
-          <SimpleCell
-            before={<Icon28ClockOutline/>}
-            onClick={() => { setActivePanel("jobsscreen") }}
-          >
-
-            Задачи
-
-          </SimpleCell>
-
           <SimpleCell
             before={<Icon28ShoppingCartOutline/>}
             onClick={() => { setActivePanel("shopscreen") }}
@@ -100,7 +94,25 @@ function App() {
 
           </SimpleCell>
         </Group>
+        <Group header={<Header>Задачи</Header>}> 
+          <SimpleCell
+            before={<Icon28ClockOutline/>}
+            onClick={() => { setActivePanel("jobsscreen") }}
+          >
 
+            Список задач
+
+          </SimpleCell>
+
+          <SimpleCell
+            before={<Icon28AddOutline/>}
+            onClick={() => { setActivePanel("jobsmanager") }}
+          >
+
+            Добавить задачу
+
+          </SimpleCell>
+        </Group>
         <Group header={<Header>Аккаунты</Header>}> 
           <SimpleCell
             before={<Icon28AddOutline/>}
@@ -155,7 +167,10 @@ function App() {
 
       </Panel>
       <Panel id="jobsscreen">
-        <JobsScreen onBack={() => { setActivePanel('home') }} />
+        <JobsScreen onBack={() => { setActivePanel('home') }}/>
+      </Panel>
+      <Panel id="jobsmanager">
+        <JobManager allJobs={() => { setActivePanel('jobsscreen') }} onBack={() => { setActivePanel('home') }} />
       </Panel>
     </View>
     </AppRoot>

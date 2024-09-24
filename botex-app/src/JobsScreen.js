@@ -62,7 +62,7 @@ const JobsScreen = ({onBack}) => {
       <PanelHeader
         before={<PanelHeaderBack onClick={onBack} />}
       >
-        botex
+        Текущие задачи
       </PanelHeader>
 
         {jobsdata.length > 0 ? (
