@@ -39,6 +39,11 @@ app.get('/accounts.add', (req, res) => {
 				"result": state
 			})
 
+			if(req.query.reg == 'true'){
+				console.log('reg')
+				botex.register()
+			}
+
 		} else {
 
 			res.send({
@@ -48,6 +53,7 @@ app.get('/accounts.add', (req, res) => {
 		}
 
 	});
+
 
 });
 
@@ -79,6 +85,14 @@ app.get('/cotex.getShop', async (req, res) => {
 	let bot = getBotByQuery(req, res)
 
 	if(bot === null){
+		
+		if(!bots[0]){
+			res.send({
+		    	"success": false,
+		    	"error": "cant get shop without accs"
+		    })
+		    return
+		}
 
 		bots[0].botex.getShop().then((a) => {
 			res.send({
@@ -388,6 +402,7 @@ function doJobs(every){
 }
 
 function dojobstage1(job){
+
 	let bot
 
 	if(job.all){
@@ -398,6 +413,7 @@ function dojobstage1(job){
 			dojobstage2(bot, job)
 
 		}
+
 	}else{
 
 		bot = bots.filter((bott) => bott.uuid == job.uuid)	
@@ -406,7 +422,9 @@ function dojobstage1(job){
 			console.log("job was outdated, cant find bot for job"+job)
 			return
 		}
+
 		dojobstage2(bot, job)
+		
 	}
 
 
@@ -415,28 +433,34 @@ function dojobstage1(job){
 }
 
 function dojobstage2(bot, job){
-			switch(job.type){
-			case "symptoms":
-				bot.botex.addSymptoms().then((a) => {
-					console.log(`${bot.botex.user.id} => symptoms success ` + JSON.stringify(a))
-				})
-				break;
-			case "markdays":
-				bot.botex.markDays().then((a) => {
-					console.log(`${bot.botex.user.id} => markdays success ` + JSON.stringify(a))
-				})
-				break;
-			case "all": 
-				bot.botex.tryToGetAllPoints().then((a) => {
-					console.log(`${bot.botex.user.id} => all success ` + JSON.stringify(a))
-				})
-				break;
-			case "auth":
-				bot.botex.auth().then((a) => {
-					console.log(`${bot.botex.user.id} => auth success ` + JSON.stringify(a))
-				})
-				break;
-		}
+
+	switch(job.type){
+
+		case "symptoms":
+			bot.botex.addSymptoms().then((a) => {
+				console.log(`${bot.botex.user.id} => symptoms success ` + JSON.stringify(a))
+			})
+		break;
+
+		case "markdays":
+			bot.botex.markDays().then((a) => {
+				console.log(`${bot.botex.user.id} => markdays success ` + JSON.stringify(a))
+			})
+		break;
+
+		case "all": 
+			bot.botex.tryToGetAllPoints().then((a) => {
+				console.log(`${bot.botex.user.id} => all success ` + JSON.stringify(a))
+			})
+		break;
+
+		case "auth":
+			bot.botex.auth().then((a) => {
+				console.log(`${bot.botex.user.id} => auth success ` + JSON.stringify(a))
+			})
+		break;
+
+	}
 }
 
 function getBotByQuery(req, res){

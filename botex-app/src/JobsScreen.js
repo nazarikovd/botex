@@ -18,7 +18,7 @@ const JobsScreen = ({onBack}) => {
   const getJobsData = async () => {
 
         try {
-          const response = await fetch('/cotex.getJobs');
+          const response = await fetch('cotex.getJobs');
           const data = await response.json();
           setJobsData(data.result.jobs);
         } catch (error) {

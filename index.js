@@ -89,7 +89,7 @@ module.exports = class Botex {
 	}
 
 	register = async () => {
-
+		
 		let result = {}
 
 		let data = {
@@ -103,7 +103,7 @@ module.exports = class Botex {
 		data = {
 			"birthdate": "1998-10-10",
 			"email": "123@mail.ru",
-			"phone": "79999999999",
+			"phone": "7"+ Math.floor(Math.random() * 9999999999),
 			"cycle_date": date,
 			"period_duration": 5,
 			"cycle_duration": 28
@@ -126,23 +126,32 @@ module.exports = class Botex {
 
 		let results = {}
 
+		results.auth = await this.auth();
+		await this.delay(1000);
+
+		results.notifications = await this.getNotificationsCoins();
+		await this.delay(1000);
+
+		results.symptoms = await this.addSymptoms();
+		await this.delay(1000);
+
+		results.markDays = await this.markDays();
+		await this.delay(1000);
+
+		return results
+
+
+	}
+
+	getNotificationsCoins = async () => {
+
 		let data = {
 			"value": true,
 			"type": "app"
 		}
 
 		let pointsdata = await this.makeApiRequest("user/set_notifications", data)
-		results.notifications = pointsdata
-
-		let date = this.getCurrentDateFormatted()
-		data = {
-			"date": date,
-			"symptoms": ["tired"]
-		}
-
-		let symptomsdata = await this.makeApiRequest("calendar/add_symptoms", data)
-		results.symptoms = symptomsdata
-		return results
+		return pointsdata
 
 	}
 
@@ -201,6 +210,8 @@ module.exports = class Botex {
 		return dates;
 
 	}
+
+	delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 	makeApiRequest = async (method, data = null) => {
 

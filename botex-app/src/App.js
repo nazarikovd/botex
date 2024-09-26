@@ -53,7 +53,7 @@ function App() {
 };
   const fetchBots = async () => {
       try {
-        const response = await fetch('/accounts.getAll');
+        const response = await fetch('accounts.getAll');
         const data = await response.json();
         setBots(data.bots); // Assuming the structure returned from the API matches this
       } catch (error) {

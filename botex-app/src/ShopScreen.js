@@ -17,7 +17,7 @@ const ShopScreen = ({onBack}) => {
   const getShopData = async () => {
 
         try {
-          const response = await fetch('/cotex.getShop');
+          const response = await fetch('cotex.getShop');
           const data = await response.json();
           setShopData(data.result.data);
         } catch (error) {

@@ -14,10 +14,12 @@ import {
   Paragraph,
   Switch,
   SimpleCell,
-  CustomScrollView
+  CustomScrollView,
+  Checkbox
 } from '@vkontakte/vkui';
 
 const AccountManager = ({onBack}) => {
+  const [regState, setRegState] = useState(true)
   const [avalue, setAValue] = useState(null)
   const [bots, setBots] = useState([]);
   const [bloading, setBLoading] = useState(false);
@@ -33,7 +35,7 @@ const AccountManager = ({onBack}) => {
   }
   const fetchBots = async () => {
       try {
-        const response = await fetch('/accounts.getAll');
+        const response = await fetch('accounts.getAll');
         const data = await response.json();
         setBots(data.bots); // Assuming the structure returned from the API matches this
       } catch (error) {
@@ -44,7 +46,7 @@ const AccountManager = ({onBack}) => {
 
   const addAccount = async (token) => {
       try {
-        const response = await fetch('/accounts.add?token='+token);
+        const response = await fetch('accounts.add?token='+token+'&reg='+regState);
         const data = await response.json();
         if(data.result.success){
           return `Успех [id${data.result.user.id}]`
@@ -70,6 +72,9 @@ const AccountManager = ({onBack}) => {
     fetchBots();
   }, []);
 
+  const handleReg = (e) => {
+    setRegState(e.target.checked)
+  }
 
   return (
     <>
@@ -97,8 +102,8 @@ const AccountManager = ({onBack}) => {
               proc
               </Button>
       </Group>
-      <SimpleCell after={<Switch />}>
-            Параметры
+      <SimpleCell before={<Checkbox onChange={e => handleReg(e)} defaultChecked/>}>
+          пройти регистрацию
       </SimpleCell>
       {log.map(l => 
         (
