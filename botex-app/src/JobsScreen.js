@@ -11,6 +11,8 @@ import {
   SimpleCell
 } from '@vkontakte/vkui';
 
+import appconfig from './config';
+
 const JobsScreen = ({onBack}) => {
 
   const [jobsdata, setJobsData] = useState([])
@@ -18,7 +20,7 @@ const JobsScreen = ({onBack}) => {
   const getJobsData = async () => {
 
         try {
-          const response = await fetch('cotex.getJobs');
+          const response = await fetch(appconfig.baseURL+'/cotex.getJobs');
           const data = await response.json();
           setJobsData(data.result.jobs);
         } catch (error) {

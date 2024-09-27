@@ -27,6 +27,8 @@ import AccountManager from './AccountManager'
 import JobsScreen from './JobsScreen'
 import JobManager from './JobManager'
 
+import appconfig from './config';
+
 function App() {
   const [bots, setBots] = useState([]);
   const [cbot, setCBot] = useState(null)
@@ -53,7 +55,7 @@ function App() {
 };
   const fetchBots = async () => {
       try {
-        const response = await fetch('accounts.getAll');
+        const response = await fetch(appconfig.baseURL+'/accounts.getAll');
         const data = await response.json();
         setBots(data.bots); // Assuming the structure returned from the API matches this
       } catch (error) {

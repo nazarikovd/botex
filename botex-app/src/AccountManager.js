@@ -18,6 +18,8 @@ import {
   Checkbox
 } from '@vkontakte/vkui';
 
+import appconfig from './config';
+
 const AccountManager = ({onBack}) => {
   const [regState, setRegState] = useState(true)
   const [avalue, setAValue] = useState(null)
@@ -35,7 +37,7 @@ const AccountManager = ({onBack}) => {
   }
   const fetchBots = async () => {
       try {
-        const response = await fetch('accounts.getAll');
+        const response = await fetch(appconfig.baseURL+'/accounts.getAll');
         const data = await response.json();
         setBots(data.bots); // Assuming the structure returned from the API matches this
       } catch (error) {
@@ -46,7 +48,7 @@ const AccountManager = ({onBack}) => {
 
   const addAccount = async (token) => {
       try {
-        const response = await fetch('accounts.add?token='+token+'&reg='+regState);
+        const response = await fetch(appconfig.baseURL+'/accounts.add?token='+token+'&reg='+regState);
         const data = await response.json();
         if(data.result.success){
           return `Успех [id${data.result.user.id}]`

@@ -16,45 +16,47 @@ import {
   Icon28Notifications
 } from '@vkontakte/icons';
 
+import appconfig from './config';
+
 const BotScreen = ({ bots, cbot, onBack }) => {
   
   const [bCount, setBCount] = useState(0)
 
   const tryToGetAll = async () => {
     if(cbot){
-      let res = await getAPI('cotex.tryToGetAllPoints', {"uuid": cbot.uuid})
+      let res = await getAPI(appconfig.baseURL+'/cotex.tryToGetAllPoints', {"uuid": cbot.uuid})
       console.log(res)
     }else{
-      let res = await getAPI('cotex.tryToGetAllPoints')
+      let res = await getAPI(appconfig.baseURL+'/cotex.tryToGetAllPoints')
       console.log(res)
     }
   };
   const symptoms = async () => {
     if(cbot){
-      let res = await getAPI('cotex.addSymptoms', {"uuid": cbot.uuid})
+      let res = await getAPI(appconfig.baseURL+'/cotex.addSymptoms', {"uuid": cbot.uuid})
       console.log(res)
     }else{
-      let res = await getAPI('cotex.addSymptoms')
+      let res = await getAPI(appconfig.baseURL+'/cotex.addSymptoms')
       console.log(res)
     }
 
   };
   const markDays = async () => {
     if(cbot){
-      let res = await getAPI('cotex.markDays', {"uuid": cbot.uuid})
+      let res = await getAPI(appconfig.baseURL+'/cotex.markDays', {"uuid": cbot.uuid})
       console.log(res)
     }else{
-      let res = await getAPI('cotex.markDays')
+      let res = await getAPI(appconfig.baseURL+'/cotex.markDays')
       console.log(res)
     }
 
   };
   const notifications = async () => {
     if(cbot){
-      let res = await getAPI('cotex.notification', {"uuid": cbot.uuid})
+      let res = await getAPI(appconfig.baseURL+'/cotex.notification', {"uuid": cbot.uuid})
       console.log(res)
     }else{
-      let res = await getAPI('cotex.notification')
+      let res = await getAPI(appconfig.baseURL+'/cotex.notification')
       console.log(res)
     }
 

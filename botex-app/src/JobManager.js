@@ -19,6 +19,8 @@ import {
   FormItem
 } from '@vkontakte/vkui';
 
+import appconfig from './config';
+
 const JobManager = ({allJobs, onBack}) => {
 
   const [bots, setBots] = useState([]);
@@ -32,7 +34,7 @@ const JobManager = ({allJobs, onBack}) => {
 
   const fetchBots = async () => {
       try {
-        const response = await fetch('accounts.getAll');
+        const response = await fetch(appconfig.baseURL+'/accounts.getAll');
         const data = await response.json();
         setBots(data.bots); // Assuming the structure returned from the API matches this
       } catch (error) {
@@ -43,7 +45,7 @@ const JobManager = ({allJobs, onBack}) => {
 
   const addJob = async (type, every, uuid=null) => {
       try {
-        let url = `cotex.addJob?type=${type}&every=${every}`
+        let url = `${appconfig.baseURL}/cotex.addJob?type=${type}&every=${every}`
         if(uuid !== "all"){
           url += `&uuid=${uuid}`
         }

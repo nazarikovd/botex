@@ -10,6 +10,8 @@ import {
   ButtonGroup,
 } from '@vkontakte/vkui';
 
+import appconfig from './config';
+
 const ShopScreen = ({onBack}) => {
 
   const [shopdata, setShopData] = useState([])
@@ -17,7 +19,7 @@ const ShopScreen = ({onBack}) => {
   const getShopData = async () => {
 
         try {
-          const response = await fetch('cotex.getShop');
+          const response = await fetch(appconfig.baseURL+'/cotex.getShop');
           const data = await response.json();
           setShopData(data.result.data);
         } catch (error) {
