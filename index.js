@@ -126,9 +126,6 @@ module.exports = class Botex {
 
 		let results = {}
 
-		results.auth = await this.auth();
-		await this.delay(1000);
-
 		results.notifications = await this.getNotificationsCoins();
 		await this.delay(1000);
 
@@ -136,6 +133,9 @@ module.exports = class Botex {
 		await this.delay(1000);
 
 		results.markDays = await this.markDays();
+		await this.delay(1000);
+
+		results.auth = await this.auth();
 		await this.delay(1000);
 
 		return results
