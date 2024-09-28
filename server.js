@@ -40,7 +40,6 @@ app.get('/accounts.add', (req, res) => {
 			})
 
 			if(req.query.reg == 'true'){
-				console.log('reg')
 				botex.register()
 			}
 
@@ -66,7 +65,7 @@ app.get('/accounts.getAll', (req, res) => {
 		result.push({
 			"uuid": bot.uuid,
 			"uid": bot.botex.user.id,
-			"points": bot.botex._cotexData.points,
+			"points": bot.botex.points,
 			"_lastCotexData": bot.botex._cotexData
 		})
 

@@ -22,6 +22,7 @@ module.exports = class Botex {
 		this.bearer = null
 		this.user = null
 		this._cotexData = null
+		this.points = null
 	}
 
 	load = async () => {
@@ -84,6 +85,7 @@ module.exports = class Botex {
 		let auth = await axios.get("https://kotex-flow.ru-prod2.kts.studio/api/user/auth?" + this.creds)
 		this.bearer = auth.data.data.token
 		this._cotexData = auth.data.data.user
+		this.points = this._cotexData.points
 		return auth.data.data
 
 	}
@@ -227,6 +229,8 @@ module.exports = class Botex {
 					headers: headers
 				})
 
+				this.collect(response.data)
+
 				return response.data
 
 			}else{
@@ -235,6 +239,8 @@ module.exports = class Botex {
 					headers: headers
 				})
 
+				this.collect(response.data)
+
 				return response.data
 			}
 
@@ -242,6 +248,22 @@ module.exports = class Botex {
 			console.log("request failed "+e)
 		}
 
+	}
+
+	collect = (obj) => {
+
+	    if (obj.data && Array.isArray(obj.data.points_added)) {
+
+	        let totalpoints = obj.data.points_added.reduce((total, item) => {
+
+	            return total + (item.points || 0);
+
+	        }, 0) || 0;
+
+	        this.points += totalpoints;
+
+	    }
+	    
 	}
 
 	// except = (log) => {
